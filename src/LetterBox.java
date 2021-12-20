@@ -2,10 +2,10 @@ import java.awt.*;
 
 // Miranda Luo
 // Sep 20, 2019
-// Description: 
+// Description: Defines a LetterBox to be displayed on the GUI
 
 public class LetterBox {
-   
+
    private String letter;
    private int width, height;
    private int x, y;
@@ -16,7 +16,7 @@ public class LetterBox {
    private int thickness;
    private boolean letterShown;
    private boolean isChanged;
-   
+
    public LetterBox(String letter, int width, int height, int x, int y, Font font, boolean letterShown) {
       this.letter = letter;
       this.width = width;
@@ -31,19 +31,21 @@ public class LetterBox {
       fontColor = Color.DARK_GRAY;
       isChanged = false;
    }
-   
+
    public void drawSelf(Graphics2D g2) {
       g2.setFont(font);
       FontMetrics fm = g2.getFontMetrics(font);
       int msgY = y + (((height - fm.getHeight()) / 2) + fm.getAscent());
-      int msgX = fm.stringWidth(letter) >= width ? x : x + width / 2  - fm.stringWidth(letter.toUpperCase()) / 2;
-      g2.setColor(borderColor);      
+      int msgX = fm.stringWidth(letter) >= width ? x : x + width / 2 - fm.stringWidth(letter.toUpperCase()) / 2;
+
+      g2.setColor(borderColor);
       g2.fillRect(x, y, width, height);
       if (!isChanged)
          g2.setColor(backgroundColor);
       else
          g2.setColor(Color.BLUE);
       g2.fillRect(x + thickness, y + thickness, width - thickness * 2, height - thickness * 2);
+
       if (letterShown) {
          if (!isChanged)
             g2.setColor(fontColor);
@@ -52,7 +54,7 @@ public class LetterBox {
          g2.drawString(letter.toUpperCase(), msgX, msgY);
       }
    }
-   
+
    public Rectangle getBounds() {
       return new Rectangle(x, y, width, height);
    }
@@ -104,7 +106,7 @@ public class LetterBox {
    public void setLetterShown(boolean letterShown) {
       this.letterShown = letterShown;
    }
-   
+
    public Font getFont() {
       return font;
    }
@@ -154,13 +156,10 @@ public class LetterBox {
    }
 
    public static String getStringFromLetters(LetterBox[] lb) {
-      
-      String s = "";
-      for (int i = 0; i < lb.length; i++) {
-         s += lb[i].getLetter();
-      }
-      return s;
-      
+      StringBuilder s = new StringBuilder();
+      for (LetterBox letterBox : lb)
+         s.append(letterBox.getLetter());
+      return s.toString();
    }
-   
+
 }

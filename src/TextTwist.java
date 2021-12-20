@@ -7,96 +7,85 @@ import java.util.*;
 // Description: TextTwist hackathon
 
 public class TextTwist {
-   
-   private ArrayList<String> allWords;
-   private ArrayList<String> sixLetterWords;
-   private String masterWord;
-   private String masterWordShuffled;
-   private String guessed;
-   private ArrayList<String> wordList;
-   private ArrayList<String> wordsGuessed;
-   private ArrayList<String> wordsLeft;
-   
-   public TextTwist(String wordFile) {
-      
-      allWords = new ArrayList<String>();
-      sixLetterWords = new ArrayList<String>();
-      wordsGuessed = new ArrayList<String>();
-      wordsLeft = new ArrayList<String>();
-      wordList = new ArrayList<String>();
-      
-      File filePath = new File(wordFile);
-      try  {
-         Scanner dataGetter = new Scanner(filePath);
-         while(dataGetter.hasNext())
-              allWords.add(dataGetter.nextLine());
-         
-         //close the file
-         dataGetter.close();
-      }
-      //checked exception, need to handle this exception
-      catch (FileNotFoundException e){
-         System.out.println("Cannot find data file.");
-      }
-      
-      for (int i = 0; i < allWords.size(); i++) {
-         if (allWords.get(i).length() == 6)
-            sixLetterWords.add(allWords.get(i));
-      }
-      
-      reset();
-      
-   }
-   
-   public void reset() {
-      
-      masterWord = sixLetterWords.get( (int) (Math.random() * sixLetterWords.size()));
-      
-      for (int i = 0; i < allWords.size(); i++) {
-         
-         ArrayList<String> masterWordArray = new ArrayList<String>();
-         for (int j = 0; j < masterWord.length(); j++) {
-            masterWordArray.add(masterWord.substring(j, j + 1));
-         }
-         
-         String currentWord = allWords.get(i);
-         if (currentWord.length() >= 3) {
-            int matchingLetters = 0;
-            for (int j = 0; j < currentWord.length(); j++) {
-               if (masterWordArray.contains(currentWord.substring(j, j + 1))) {
-                  matchingLetters++;
-                  masterWordArray.remove(currentWord.substring(j, j + 1));
-               }
-               
+
+    private ArrayList<String> allWords;
+    private ArrayList<String> sixLetterWords;
+    private String masterWord;
+    private String masterWordShuffled;
+    private String guessed;
+    private ArrayList<String> wordList;
+    private ArrayList<String> wordsGuessed;
+    private ArrayList<String> wordsLeft;
+
+    public TextTwist(String wordFile) {
+        allWords = new ArrayList<>();
+        sixLetterWords = new ArrayList<>();
+        wordsGuessed = new ArrayList<>();
+        wordsLeft = new ArrayList<>();
+        wordList = new ArrayList<>();
+
+        File filePath = new File(wordFile);
+        try {
+            Scanner dataGetter = new Scanner(filePath);
+            while (dataGetter.hasNext())
+                allWords.add(dataGetter.nextLine());
+            //close the file
+            dataGetter.close();
+        }
+        //checked exception, need to handle this exception
+        catch (FileNotFoundException e) {
+            System.out.println("Cannot find data file.");
+        }
+
+        for (String allWord : allWords)
+            if (allWord.length() == 6)
+                sixLetterWords.add(allWord);
+
+        reset();
+    }
+
+    public void reset() {
+
+        masterWord = sixLetterWords.get((int) (Math.random() * sixLetterWords.size()));
+
+        for (String allWord : allWords) {
+            ArrayList<String> masterWordArray = new ArrayList<>();
+            for (int j = 0; j < masterWord.length(); j++) {
+                masterWordArray.add(masterWord.substring(j, j + 1));
             }
-            
-            if (matchingLetters == currentWord.length()) {wordsLeft.add(currentWord); wordList.add(currentWord);}
-         }
-         
-      }
-      
-      guessed = null;
-      
-      
-      shuffle();
-            
-   }
-   
-   public void shuffle() 
-   {
-      
-      //fix later
-      
-      
-      String[] shuffledWordArray = new String[masterWord.length()];
-      
-      for (int i = 0; i < masterWord.length(); i++) {
-         shuffledWordArray[i] = masterWord.substring(i, i+1);
-      }
-      
-      
-      Collections.shuffle(Arrays.asList(shuffledWordArray));
-      
+
+            if (allWord.length() >= 3) {
+                int matchingLetters = 0;
+
+                for (int j = 0; j < allWord.length(); j++) {
+                    if (masterWordArray.contains(allWord.substring(j, j + 1))) {
+                        matchingLetters++;
+                        masterWordArray.remove(allWord.substring(j, j + 1));
+                    }
+                }
+
+                if (matchingLetters == allWord.length()) {
+                    wordsLeft.add(allWord);
+                    wordList.add(allWord);
+                }
+            }
+        }
+
+        guessed = null;
+
+        shuffle();
+
+    }
+
+    public void shuffle() {
+        //fix later
+        String[] shuffledWordArray = new String[masterWord.length()];
+
+        for (int i = 0; i < masterWord.length(); i++)
+            shuffledWordArray[i] = masterWord.substring(i, i + 1);
+
+        Collections.shuffle(Arrays.asList(shuffledWordArray));
+
 //      for(int i = masterWord.length(); i > 0; i--) {
 //         int randomNum = (int) (Math.random() * (masterWord.length() - 1)) + 1;
 ////         System.out.println(randomNum);
@@ -107,140 +96,125 @@ public class TextTwist {
 //         shuffledWord = temp + chunk1 + temp2 + chunk2;
 ////         System.out.println(shuffledWord);
 //      }
-      
-      String shuffledWord = "";
-      
-      for (int i = 0; i < shuffledWordArray.length; i++) {
-         shuffledWord += shuffledWordArray[i];
-      }
-         
-      masterWordShuffled = shuffledWord;
-      
-   }
-   
-   public void run() {
-      
-      Scanner input = new Scanner(System.in);
-      
-      do {
-         
-         while (wordsLeft.size() > 0 && !guessed.equalsIgnoreCase("quit")) {
-            
-            System.out.println(masterWordShuffled);
-            
-            System.out.println("Words left: " + wordsLeft.size());
-            
-            System.out.print("Guess: ");
-            guessed = input.nextLine();
-            
+
+        StringBuilder shuffledWord = new StringBuilder();
+        for (String s : shuffledWordArray)
+            shuffledWord.append(s);
+        masterWordShuffled = shuffledWord.toString();
+    }
+
+    public void run() {
+        Scanner input = new Scanner(System.in);
+
+        do {
+            while (wordsLeft.size() > 0 && !guessed.equalsIgnoreCase("quit")) {
+                System.out.println(masterWordShuffled);
+                System.out.println("Words left: " + wordsLeft.size());
+                System.out.print("Guess: ");
+                guessed = input.nextLine();
+
+                System.out.println();
+
+                if (wordsLeft.contains(guessed))
+                    wordsGuessed.add(wordsLeft.remove(wordsLeft.indexOf(guessed)));
+                else if (guessed.equalsIgnoreCase("s"))
+                    shuffle();
+
+            }
+
             System.out.println();
-            
-            if (wordsLeft.contains(guessed)) {
-               wordsGuessed.add(wordsLeft.remove(wordsLeft.indexOf(guessed)));
+
+            if (wordsLeft.size() == 0)
+                System.out.println("You Win!");
+            else {
+                System.out.println("Words Left: " + wordsLeft.size());
+                System.out.println(wordsLeft);
             }
-            else if (guessed.equalsIgnoreCase("s")) {
-               shuffle();
-            }
-            
-         }
-         
-         System.out.println();
-         
-         if (wordsLeft.size() == 0)
-            System.out.println("You Win!");
-         else {
-            System.out.println("Words Left: " + wordsLeft.size());
-            System.out.println(wordsLeft);
-         }
-         System.out.println("Do you want to play again? y/n");
-         reset();
-         
-      } while (input.nextLine().equals("y"));
-      
-      input.close();
-      
-   }
-   
-   public void update() {
-      
-      if (wordsLeft.contains(guessed)) {
-         wordsGuessed.add(wordsLeft.remove(wordsLeft.indexOf(guessed)));
+            System.out.println("Do you want to play again? y/n");
+            reset();
+
+        } while (input.nextLine().equals("y"));
+
+        input.close();
+    }
+
+    public void update() {
+        if (wordsLeft.contains(guessed)) {
+            wordsGuessed.add(wordsLeft.remove(wordsLeft.indexOf(guessed)));
 //         System.out.println(wordsLeft);
-      }
-      
+        }
 //      else {
 //         System.out.println("updated");
 //      }
-      
-   }
-   
-   public boolean isGameOver() {
-      return wordsLeft.size() == 0;
-   }
-   
-   public ArrayList<String> getAllWords() {
-      return allWords;
-   }
+    }
 
-   public void setAllWords(ArrayList<String> allWords) {
-      this.allWords = allWords;
-   }
+    public boolean isGameOver() {
+        return wordsLeft.size() == 0;
+    }
 
-   public ArrayList<String> getSixLetterWords() {
-      return sixLetterWords;
-   }
+    public ArrayList<String> getAllWords() {
+        return allWords;
+    }
 
-   public void setSixLetterWords(ArrayList<String> sixLetterWords) {
-      this.sixLetterWords = sixLetterWords;
-   }
+    public void setAllWords(ArrayList<String> allWords) {
+        this.allWords = allWords;
+    }
 
-   public String getMasterWord() {
-      return masterWord;
-   }
+    public ArrayList<String> getSixLetterWords() {
+        return sixLetterWords;
+    }
 
-   public void setMasterWord(String masterWord) {
-      this.masterWord = masterWord;
-   }
+    public void setSixLetterWords(ArrayList<String> sixLetterWords) {
+        this.sixLetterWords = sixLetterWords;
+    }
 
-   public ArrayList<String> getWordsGuessed() {
-      return wordsGuessed;
-   }
+    public String getMasterWord() {
+        return masterWord;
+    }
 
-   public void setWordsGuessed(ArrayList<String> wordsGuessed) {
-      this.wordsGuessed = wordsGuessed;
-   }
+    public void setMasterWord(String masterWord) {
+        this.masterWord = masterWord;
+    }
 
-   public ArrayList<String> getWordsLeft() {
-      return wordsLeft;
-   }
+    public ArrayList<String> getWordsGuessed() {
+        return wordsGuessed;
+    }
 
-   public void setWordsLeft(ArrayList<String> wordsLeft) {
-      this.wordsLeft = wordsLeft;
-   }
+    public void setWordsGuessed(ArrayList<String> wordsGuessed) {
+        this.wordsGuessed = wordsGuessed;
+    }
 
-   public String getMasterWordShuffled() {
-      return masterWordShuffled;
-   }
+    public ArrayList<String> getWordsLeft() {
+        return wordsLeft;
+    }
 
-   public void setMasterWordShuffled(String masterWordShuffled) {
-      this.masterWordShuffled = masterWordShuffled;
-   }
+    public void setWordsLeft(ArrayList<String> wordsLeft) {
+        this.wordsLeft = wordsLeft;
+    }
 
-   public String getGuessed() {
-      return guessed;
-   }
+    public String getMasterWordShuffled() {
+        return masterWordShuffled;
+    }
 
-   public void setGuessed(String guessed) {
-      this.guessed = guessed;
-   }
+    public void setMasterWordShuffled(String masterWordShuffled) {
+        this.masterWordShuffled = masterWordShuffled;
+    }
 
-   public ArrayList<String> getWordList() {
-      return wordList;
-   }
+    public String getGuessed() {
+        return guessed;
+    }
 
-   public void setWordList(ArrayList<String> wordList) {
-      this.wordList = wordList;
-   }
+    public void setGuessed(String guessed) {
+        this.guessed = guessed;
+    }
+
+    public ArrayList<String> getWordList() {
+        return wordList;
+    }
+
+    public void setWordList(ArrayList<String> wordList) {
+        this.wordList = wordList;
+    }
 
 //   public static void main(String[] args) 
 //   {

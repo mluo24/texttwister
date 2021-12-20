@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,14 +17,14 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
     private static final int PREF_H = 770;
     private RenderingHints hints = new RenderingHints
             (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    private Font font = new Font("Arial", Font.PLAIN, 40);
-    private Font font2 = new Font("Arial", Font.PLAIN, 18);
+    private final Font font = new Font("Arial", Font.PLAIN, 40);
+    private final Font font2 = new Font("Arial", Font.PLAIN, 18);
     private TextTwist game;
     private String[] displayWords;
     private ArrayList<LetterBox[]> displayWords2;
-    private MyButton shuffleButton = new MyButton(PREF_W / 2 - 300, PREF_H / 2 + 100, 200, 75, "Shuffle");
-    private MyButton giveUpButton = new MyButton(PREF_W / 2 - 90, PREF_H / 2 + 100, 200, 75, "Give up");
-    private MyButton restartButton = new MyButton(PREF_W / 2 + 110, PREF_H / 2 + 100, 200, 75, "Restart");
+    private final MyButton shuffleButton = new MyButton(PREF_W / 2 - 300, PREF_H / 2 + 100, 200, 75, "Shuffle");
+    private final MyButton giveUpButton = new MyButton(PREF_W / 2 - 90, PREF_H / 2 + 100, 200, 75, "Give up");
+    private final MyButton restartButton = new MyButton(PREF_W / 2 + 110, PREF_H / 2 + 100, 200, 75, "Restart");
     private LetterBox[] masterWordArray;
     private LetterBox[] typedWord2;
     private char[] typedWord;
@@ -46,7 +44,6 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHints(hints);
@@ -65,7 +62,6 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
         int messageX = PREF_W / 2 - (masterWordArray[0].getWidth() * masterWordArray.length + spaceBetween * (message.length() - 1)) / 2;
         int messageY = 150;
 
-
         if (endScreen || game.isGameOver()) {
             for (int i = 0; i < masterWordArray.length; i++) {
                 masterWordArray[i].setLetter(game.getMasterWord().substring(i, i + 1));
@@ -73,12 +69,10 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
         }
 
         for (int i = 0; i < masterWordArray.length; i++) {
-
             masterWordArray[i].setX(messageX + i * (spaceBetween + masterWordArray[i].getWidth()));
             masterWordArray[i].setY(messageY);
 
             masterWordArray[i].drawSelf(g2);
-
         }
 
         if (endScreen || game.isGameOver()) {
@@ -89,11 +83,9 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
         }
 
         for (int i = 0; i < typedWord2.length; i++) {
-
             typedWord2[i].setX(messageX + i * (spaceBetween + typedWord2[i].getWidth()));
             typedWord2[i].setY(messageY + typedWord2[i].getHeight() + 10);
             typedWord2[i].drawSelf(g2);
-
         }
 
         g2.setFont(font2);
@@ -126,15 +118,11 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
             int xValStart = game.getWordList().size() - game.getWordList().size() / 2 <= 23 ? (PREF_W - 10 - displayWords[i].length() * (spaceX + widthRect)) : (PREF_W - 10 - spaceX - 5 - displayWords[i].length() * (spaceX + widthRect) - game.getMasterWord().length() * (spaceX + widthRect));
 
             if (counter < 23) {
-
                 for (int j = 0; j < displayWords2.get(i).length; j++) {
-
                     displayWords2.get(i)[j].setX(xValStart + ((widthRect + spaceX) * j));
                     displayWords2.get(i)[j].setY(10 + (counter * (spaceY + heightRect)));
                     displayWords2.get(i)[j].drawSelf(g2);
-
                 }
-
             } else {
                 xValStart = (PREF_W - 10 - displayWords[i].length() * (spaceX + widthRect));
 
@@ -194,7 +182,6 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
         msgWidth = fm.stringWidth(message);
         msgHeight = fm.getHeight();
         g2.drawString(message, PREF_W / 2 - msgWidth / 2, 80);
-
     }
 
     public int getNextAvailableSpace() {
@@ -205,13 +192,9 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
     }
 
     public void reset() {
-
         endScreen = false;
-
         isCorrect = false;
-
         game = new TextTwist("words.txt");
-
         typedWord = new char[game.getMasterWord().length()];
         typedWord2 = new LetterBox[game.getMasterWord().length()];
 
@@ -229,18 +212,14 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
             masterWordArray[i] = new LetterBox(game.getMasterWordShuffled().substring(i, i + 1), 90, 90, 0, 0, new Font("Arial", Font.PLAIN, 50), true);
         }
 
-        Collections.sort(temp, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (o1.length() != o2.length()) {
-                    return o1.length() - o2.length();
-                }
-                return o1.compareTo(o2);
+        temp.sort((o1, o2) -> {
+            if (o1.length() != o2.length()) {
+                return o1.length() - o2.length();
             }
+            return o1.compareTo(o2);
         });
 
         for (int i = 0; i < temp.size(); i++) {
-
             LetterBox[] wordy = new LetterBox[temp.get(i).length()];
 
             for (int j = 0; j < wordy.length; j++) {
@@ -250,19 +229,14 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
 
             displayWords2.add(wordy);
 
-
-            String thingy = "";
-            for (int j = 0; j < temp.get(i).length(); j++) thingy += " ";
-            displayWords[i] = thingy;
+            displayWords[i] = " ".repeat(temp.get(i).length());
         }
 
-
-        availableLetters = new ArrayList<String>();
+        availableLetters = new ArrayList<>();
 
         for (int i = 0; i < game.getMasterWord().length(); i++) {
             availableLetters.add(game.getMasterWord().substring(i, i + 1));
         }
-
     }
 
     public void shuffle() {
@@ -276,20 +250,15 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
 
     @Override
     public void mousePressed(MouseEvent e) {
-
         Point clicked = e.getPoint();
 
         if (!(endScreen || game.isGameOver())) {
-
             for (LetterBox lb : masterWordArray) {
-
                 if (lb.getBounds().contains(clicked) && availableLetters.contains(lb.getLetter())) {
-
                     typedWord2[getNextAvailableSpace()].setLetter(lb.getLetter());
                     typedWord2[getNextAvailableSpace()].setLetterShown(true);
 
                     availableLetters.remove(lb.getLetter());
-
 
                     for (LetterBox l : masterWordArray) {
                         if (l.getLetter().equals(lb.getLetter()) && !l.isChanged()) {
@@ -299,15 +268,9 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
                     }
                 }
             }
-
             if (shuffleButton.getSelfBounds().contains(clicked)) {
                 shuffle();
-//         game.shuffle();
-//         for (int i = 0; i < masterWordArray.length; i++) {
-//            masterWordArray[i].setLetter(game.getMasterWordShuffled().substring(i, i+1));
-//         }
             }
-
             if (giveUpButton.getSelfBounds().contains(clicked)) {
                 endScreen = true;
                 for (LetterBox[] lb : displayWords2) {
@@ -393,17 +356,14 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
 
     @Override
     public void keyPressed(KeyEvent e) {
-
         char keyCode = (char) e.getKeyCode();
 
         if (!(endScreen || game.isGameOver())) {
-
             if (game.getMasterWord().indexOf((Character.toLowerCase(keyCode))) != -1 && getNextAvailableSpace() < typedWord2.length && availableLetters.contains(Character.toLowerCase(keyCode) + "")) {
                 typedWord2[getNextAvailableSpace()].setLetter(Character.toLowerCase(keyCode) + "");
                 typedWord2[getNextAvailableSpace()].setLetterShown(true);
 
                 availableLetters.remove(Character.toLowerCase(keyCode) + "");
-
 
                 for (LetterBox l : masterWordArray) {
                     if (l.getLetter().equals(Character.toLowerCase(keyCode) + "") && !l.isChanged()) {
@@ -411,11 +371,9 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
                         break;
                     }
                 }
-
             }
 
             if (keyCode == KeyEvent.VK_DOWN && game.getGuessed() != null && typedWord2[0].getLetter().equals(" ")) {
-
                 availableLetters = new ArrayList<>();
 
                 for (int i = 0; i < game.getMasterWord().length(); i++) {
@@ -424,12 +382,10 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
                 }
 
                 for (int i = 0; i < game.getGuessed().length(); i++) {
-
                     typedWord2[i].setLetter(game.getGuessed().substring(i, i + 1));
                     typedWord2[i].setLetterShown(true);
 
                     availableLetters.remove(game.getGuessed().substring(i, i + 1));
-
 
                     for (LetterBox l : masterWordArray) {
                         if (l.getLetter().equals(game.getGuessed().substring(i, i + 1)) && !l.isChanged()) {
@@ -438,18 +394,18 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
                         }
                     }
                 }
-
             }
 
             if (keyCode == KeyEvent.VK_BACK_SPACE) {
                 if (getNextAvailableSpace() - 1 != -1) {
-
                     for (int i = masterWordArray.length - 1; i >= 0; i--) {
-                        if (masterWordArray[i].getLetter().equals(typedWord2[getNextAvailableSpace() - 1].getLetter()) && masterWordArray[i].isChanged()) {
+                        if (masterWordArray[i].getLetter().equals(typedWord2[getNextAvailableSpace() - 1].getLetter())
+                                && masterWordArray[i].isChanged()) {
                             masterWordArray[i].setChanged(false);
                             break;
                         }
                     }
+
                     availableLetters.add(typedWord2[getNextAvailableSpace() - 1].getLetter());
                     typedWord2[getNextAvailableSpace() - 1].setLetter(" ");
                     typedWord2[getNextAvailableSpace() - 1].setLetterShown(false);
@@ -457,35 +413,28 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
             }
 
             if (keyCode == KeyEvent.VK_ENTER) {
-
                 if (!typedWord2[0].getLetter().equals(" ")) {
-
-                    availableLetters = new ArrayList<String>();
+                    availableLetters = new ArrayList<>();
 
                     for (int i = 0; i < game.getMasterWord().length(); i++) {
                         availableLetters.add(game.getMasterWord().substring(i, i + 1));
                         masterWordArray[i].setChanged(false);
                     }
 
-                    String newThing = "";
+                    StringBuilder newThing = new StringBuilder();
 
                     for (LetterBox l : typedWord2) {
-                        newThing += l.getLetter();
+                        newThing.append(l.getLetter());
                         l.setLetter(" ");
                         l.setLetterShown(false);
                     }
 
-                    game.setGuessed(newThing.trim());
-
+                    game.setGuessed(newThing.toString().trim());
                     isCorrect = game.getWordsLeft().contains(game.getGuessed());
-
                 }
-
             }
 
-            if (keyCode == KeyEvent.VK_SPACE) {
-                shuffle();
-            }
+            if (keyCode == KeyEvent.VK_SPACE) shuffle();
 
             game.update();
 
@@ -498,9 +447,7 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
             }
 
             repaint();
-
         }
-
     }
 
     @Override
