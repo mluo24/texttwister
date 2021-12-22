@@ -15,3 +15,13 @@ afterwards to play again.
 Have fun! I will maybe update this to look better in the future.
 
 (if you have any issues please let me know!)
+
+---
+
+### Todo for the future (very optimistic)
+
+- Refactor code (code written by high school me was not very good) + optimization
+- Fix styling
+- Use a better dictionary/pull a dictionary with an API
+- Add difficulty levels/use hints to make the game more user-friendly or fun
+- Add multiplayer (see who can find the most words, will be the most difficult)
