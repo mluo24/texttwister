@@ -15,7 +15,7 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
     private static final long serialVersionUID = 1L;
     private static final int PREF_W = 1400;
     private static final int PREF_H = 770;
-    private RenderingHints hints = new RenderingHints
+    private final RenderingHints hints = new RenderingHints
             (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     private final Font font = new Font("Arial", Font.PLAIN, 40);
     private final Font font2 = new Font("Arial", Font.PLAIN, 18);
@@ -212,11 +212,11 @@ public class GUI extends JPanel implements MouseListener, MouseMotionListener, K
             masterWordArray[i] = new LetterBox(game.getMasterWordShuffled().substring(i, i + 1), 90, 90, 0, 0, new Font("Arial", Font.PLAIN, 50), true);
         }
 
-        temp.sort((o1, o2) -> {
-            if (o1.length() != o2.length()) {
-                return o1.length() - o2.length();
+        temp.sort((s1, s2) -> {
+            if (s1.length() != s2.length()) {
+                return s1.length() - s2.length();
             }
-            return o1.compareTo(o2);
+            return s1.compareTo(s2);
         });
 
         for (int i = 0; i < temp.size(); i++) {
